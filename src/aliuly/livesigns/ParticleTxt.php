@@ -21,7 +21,7 @@ class ParticleTxt implements Listener{
 		$this->cfgtxt = [];
 		$this->loadFloats();
 		$owner->getServer()->getPluginManager()->registerEvents($this,$owner);
-		$owner->getServer()->getScheduler()->scheduleRepeatingTask(
+		$owner->getScheduler()->scheduleRepeatingTask(
 			new PluginCallbackTask($owner,[$this,"updateTimer"],[]),$ticks
 		);
 		$this->factory();

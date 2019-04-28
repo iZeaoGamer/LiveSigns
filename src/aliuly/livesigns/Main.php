@@ -33,7 +33,7 @@ class Main extends BasicPlugin implements CommandExecutor {
 	public function onDisable() {
 		if ($this->fetcher !== null && !$this->fetcher->isFinished()) {
 			$id = $this->fetcher->getTaskId();
-			$this->getServer()->getScheduler()->cancelTask($id);
+			$this->getScheduler()->cancelTask($id);
 		}
 		parent::onDisable();
 	}
@@ -94,10 +94,10 @@ class Main extends BasicPlugin implements CommandExecutor {
 		$this->fetcher = null;
 		$this->fetchcfg = $cf["fetcher"];
 
-		$this->getServer()->getScheduler()->scheduleRepeatingTask(
+		$this->getScheduler()->scheduleRepeatingTask(
 			new PluginCallbackTask($this,[$this,"expireCache"],[$cf["settings"]["cache-signs"]]),$cf["settings"]["expire-cache"]
 		);
-		$this->getServer()->getScheduler()->scheduleRepeatingTask(new TileUpdTask($this),$cf["settings"]["tile-updates"]);
+		$this->getScheduler()->scheduleRepeatingTask(new TileUpdTask($this),$cf["settings"]["tile-updates"]);
 
 		$this->floats = new ParticleTxt($this,$cf["settings"]["tile-updates"]);
 		$this->cmds = [
@@ -151,7 +151,7 @@ class Main extends BasicPlugin implements CommandExecutor {
 		if (count($pkgs) == 0) return;
 		$task = $this->fetcher = new FetchTask($this,$this->fetchcfg,$pkgs);
 
-		$this->getServer()->getScheduler()->scheduleAsyncTask($task);
+		$this->getScheduler()->scheduleAsyncTask($task);
 	}
 	public function retrieveDone($pkgs) {
 		$now = time();
@@ -306,7 +306,7 @@ class Main extends BasicPlugin implements CommandExecutor {
 	// Command implementations
 	//
 	//////////////////////////////////////////////////////////////////////
-	public function onCommand(CommandSender $sender, Command $cmd, $label, array $args) {
+	public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool {
 		if ($cmd->getName() == "floatsigns") {
 			return $this->cmds["fs"]->onSCmd($sender,$args);
 		}
